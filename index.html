@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Be My Valentine?</title>
+
   <style>
     :root{
       --bg:#fff6f8;
@@ -11,7 +12,13 @@
       --accent-2:#ff7aa2;
       --muted:#6b6b6b;
     }
-    html,body{height:100%;margin:0;font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    }
+
     body{
       display:grid;
       place-items:center;
@@ -33,7 +40,6 @@
       margin:0 0 22px 0;
       font-size:28px;
       color:#3d2430;
-      letter-spacing:0.2px;
     }
 
     .buttons{
@@ -41,8 +47,6 @@
       justify-content:center;
       gap:18px;
       margin-top:8px;
-      position:relative;
-      height:64px;
     }
 
     button{
@@ -54,150 +58,119 @@
       cursor:pointer;
       user-select:none;
       box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-      transition: transform 180ms ease, box-shadow 180ms ease;
+      transition: transform 180ms ease;
     }
 
-    button:active{ transform: translateY(2px) scale(0.995); }
+    button:active{
+      transform: translateY(2px) scale(0.995);
+    }
 
     #yesBtn{
       background: linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%);
       color:white;
     }
 
+    /* starts aligned */
     #noBtn{
       background: white;
       color:var(--accent);
       border:2px solid rgba(214,51,108,0.12);
-      position: fixed;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      transition: transform 220ms cubic-bezier(.2,.9,.3,1), left 220ms ease, top 220ms ease;
-      z-index: 999;
+      position: relative;
       min-width:120px;
     }
 
-    .hint{font-size:13px; color:#8b6b75; margin-top:12px;}
-    .heart {
+    .hint{
+      font-size:13px;
+      color:#8b6b75;
+      margin-top:12px;
+    }
+
+    .heart{
       display:inline-block;
       margin-left:8px;
-      transform:translateY(0);
       transition: transform 250ms ease;
     }
   </style>
 </head>
-<body>
-  <div class="card" id="card">
-    <h1>Would you be my valentine? <span class="heart" aria-hidden>💖</span></h1>
 
-    <div class="buttons" aria-hidden>
-      <button id="yesBtn" type="button">Yes</button>
-      <button id="noBtn" type="button" aria-label="No">No</button>
+<body>
+  <div class="card">
+    <h1>Would you be my valentine? <span class="heart">💖</span></h1>
+
+    <div class="buttons">
+      <button id="yesBtn">Yes</button>
+      <button id="noBtn">No</button>
     </div>
 
-    <div class="hint">Click Yes to accept — No will run away if you try to catch it 😉</div>
+    <div class="hint">
+      Click Yes to accept — No refuses to cooperate 😉
+    </div>
   </div>
 
   <script>
-    (function() {
+    (function(){
       const yesBtn = document.getElementById('yesBtn');
-      const noBtn = document.getElementById('noBtn');
-      const card = document.getElementById('card');
+      const noBtn  = document.getElementById('noBtn');
 
-      function placeNoInitial() {
-        const rect = card.getBoundingClientRect();
-        const startX = window.innerWidth / 2;
-        const startY = rect.top + rect.height / 2 + 36;
-        setBtnPosition(startX, startY);
+      let floating = false;
+
+      function makeFloating(){
+        if (floating) return;
+
+        const r = noBtn.getBoundingClientRect();
+        noBtn.style.position = 'fixed';
+        noBtn.style.left = r.left + 'px';
+        noBtn.style.top  = r.top  + 'px';
+        noBtn.style.zIndex = 999;
+
+        floating = true;
       }
 
-      function setBtnPosition(x, y){
-        const bw = noBtn.offsetWidth, bh = noBtn.offsetHeight;
-        const padding = 12;
-        const minX = padding;
-        const minY = padding;
-        const maxX = window.innerWidth - bw - padding;
-        const maxY = window.innerHeight - bh - padding;
-        const clampedX = Math.min(maxX, Math.max(minX, x - bw/2));
-        const clampedY = Math.min(maxY, Math.max(minY, y - bh/2));
-        noBtn.style.left = clampedX + 'px';
-        noBtn.style.top = clampedY + 'px';
+      function moveAwayFrom(x, y){
+        makeFloating();
+
+        const bw = noBtn.offsetWidth;
+        const bh = noBtn.offsetHeight;
+        const pad = 12;
+
+        let nx = window.innerWidth  - x;
+        let ny = window.innerHeight - y;
+
+        nx = Math.max(pad, Math.min(nx - bw/2, window.innerWidth  - bw - pad));
+        ny = Math.max(pad, Math.min(ny - bh/2, window.innerHeight - bh - pad));
+
+        noBtn.style.left = nx + 'px';
+        noBtn.style.top  = ny + 'px';
       }
 
-      function moveNoAwayFrom(mx, my) {
-        const attempts = 18;
-        const minDist = 200;
-        for (let i = 0; i < attempts; i++) {
-          const x = Math.random() * window.innerWidth;
-          const y = Math.random() * window.innerHeight;
-          const d = Math.hypot(x - mx, y - my);
-          if (d > minDist) {
-            setBtnPosition(x, y);
-            return;
-          }
-        }
-        setBtnPosition(window.innerWidth - mx, window.innerHeight - my);
-      }
+      function checkProximity(x, y){
+        const r = noBtn.getBoundingClientRect();
+        const cx = r.left + r.width/2;
+        const cy = r.top  + r.height/2;
 
-      function onMouseMove(e) {
-        const rect = noBtn.getBoundingClientRect();
-        const bx = rect.left + rect.width/2;
-        const by = rect.top + rect.height/2;
-        const dist = Math.hypot(e.clientX - bx, e.clientY - by);
-        if (dist < 140) {
-          moveNoAwayFrom(e.clientX, e.clientY);
+        if (Math.hypot(x - cx, y - cy) < 140){
+          moveAwayFrom(x, y);
         }
       }
 
-      function onTouchMove(e){
-        if (!e.touches || !e.touches.length) return;
-        const t = e.touches[0];
-        onMouseMove({clientX: t.clientX, clientY: t.clientY});
-      }
-
-      noBtn.addEventListener('click', () => {
-        noBtn.disabled = true;
-        noBtn.innerText = "Fine... 😢";
-        noBtn.style.transform = "scale(0.97)";
-        setTimeout(() => {
-          noBtn.style.transform = "";
-          noBtn.disabled = false;
-        }, 700);
-      });
-
-      // ✅ UPDATED: redirect to voucher.html
       yesBtn.addEventListener('click', () => {
         yesBtn.disabled = true;
         yesBtn.innerText = "Yay! ❤️";
-
-        const heart = document.querySelector('.heart');
-        heart.style.transform = 'translateY(-6px) scale(1.2)';
-
+        document.querySelector('.heart').style.transform = 'scale(1.3)';
         setTimeout(() => {
           window.location.href = "voucher.html";
         }, 900);
       });
 
-      noBtn.addEventListener('mouseenter', (e) => {
-        moveNoAwayFrom(e.clientX, e.clientY);
+      window.addEventListener('mousemove', e => {
+        checkProximity(e.clientX, e.clientY);
       });
 
-      window.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('touchmove', onTouchMove, {passive:true});
-      window.addEventListener('resize', placeNoInitial);
-
-      window.addEventListener('load', () => {
-        setTimeout(placeNoInitial, 40);
-      });
-
-      noBtn.addEventListener('keydown', (e) => {
-        const step = 40;
-        const rect = noBtn.getBoundingClientRect();
-        if (e.key === 'ArrowLeft') setBtnPosition(rect.left - step, rect.top);
-        if (e.key === 'ArrowRight') setBtnPosition(rect.left + step, rect.top);
-        if (e.key === 'ArrowUp') setBtnPosition(rect.left, rect.top - step);
-        if (e.key === 'ArrowDown') setBtnPosition(rect.left, rect.top + step);
-      });
+      window.addEventListener('touchmove', e => {
+        if (e.touches[0]) {
+          checkProximity(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: true });
 
     })();
   </script>
