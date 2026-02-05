@@ -3,93 +3,78 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Date Voucher 💝</title>
+  <title>Your Valentine Voucher 💖</title>
 
   <style>
-    :root{
-      --bg:#fff6f8;
-      --accent:#d6336c;
-      --accent-2:#ff7aa2;
-      --text:#3d2430;
+    :root {
+      --bg: #fff6f8;
+      --accent: #d6336c;
+      --accent-2: #ff7aa2;
+      --text: #3d2430;
+      --muted: #6b6b6b;
     }
 
-    html,body{
-      height:100%;
-      margin:0;
-      font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-    }
-
-    body{
-      display:grid;
-      place-items:center;
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      display: grid;
+      place-items: center;
       background: radial-gradient(circle at 10% 10%, #fff0f2 0%, var(--bg) 40%);
-      color:var(--text);
+      color: var(--text);
     }
 
-    .voucher{
-      background: white;
-      padding:40px;
-      border-radius:20px;
-      box-shadow: 0 12px 40px rgba(214,51,108,0.18);
-      max-width:520px;
-      text-align:center;
-      border:3px dashed rgba(214,51,108,0.25);
+    .voucher {
+      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,250,252,0.9));
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 8px 30px rgba(214,51,108,0.15);
+      max-width: 500px;
+      text-align: center;
     }
 
-    h1{
-      margin-top:0;
-      color:var(--accent);
-      font-size:32px;
+    h1 {
+      color: var(--accent);
+      margin-top: 0;
+      font-size: 32px;
     }
 
-    .date{
-      font-size:20px;
-      font-weight:600;
-      margin:20px 0;
+    ul {
+      text-align: left;
+      margin: 20px 0 20px 0;
+      padding-left: 20px;
+      font-size: 18px;
     }
 
-    .details{
-      font-size:16px;
-      line-height:1.6;
-      margin-bottom:24px;
+    ul li {
+      margin-bottom: 10px;
     }
 
-    .heart{
-      font-size:36px;
-      margin:16px 0;
+    .redeem-note {
+      margin-top: 25px;
+      font-size: 16px;
+      color: var(--muted);
+      font-style: italic;
     }
 
-    .fineprint{
-      font-size:13px;
-      opacity:0.75;
+    .heart {
+      display: inline-block;
+      margin-left: 6px;
+      transform: scale(1.2);
     }
   </style>
 </head>
+
 <body>
-
   <div class="voucher">
-    <h1>💝 Date Voucher 💝</h1>
-
-    <div class="heart">❤️✨❤️</div>
-
-    <div class="date">
-      Redeemable on<br>
-      <strong>February 14</strong>
-    </div>
-
-    <div class="details">
-      This voucher entitles the bearer to:<br><br>
-      🍽️ A romantic date<br>
-      💬 Meaningful conversations<br>
-      😂 Laughs and good vibes<br>
-      💕 Unlimited affection
-    </div>
-
-    <div class="fineprint">
-      No expiration. No refunds.  
-      Redeemable only by the cutest Valentine 💌
-    </div>
+    <h1>Valentine Voucher <span class="heart">💖</span></h1>
+    <p>This voucher entitles you to:</p>
+    <ul>
+      <li>Good food, laughs, and good vibes</li>
+      <li>Unlimited spoiling</li>
+      <li>Massages</li>
+    </ul>
+    <p class="redeem-note">Redeemable only by the prettiest Patootie</p>
   </div>
-
 </body>
 </html>
