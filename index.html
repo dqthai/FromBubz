@@ -42,7 +42,7 @@
       gap:18px;
       margin-top:8px;
       position:relative;
-      height:64px; /* reserve space for moving button */
+      height:64px;
     }
 
     button{
@@ -68,7 +68,7 @@
       background: white;
       color:var(--accent);
       border:2px solid rgba(214,51,108,0.12);
-      position: fixed; /* we will position no button absolutely on the viewport */
+      position: fixed;
       left:50%;
       top:50%;
       transform:translate(-50%,-50%);
@@ -77,7 +77,6 @@
       min-width:120px;
     }
 
-    /* small touch & visual polish */
     .hint{font-size:13px; color:#8b6b75; margin-top:12px;}
     .heart {
       display:inline-block;
@@ -93,7 +92,6 @@
 
     <div class="buttons" aria-hidden>
       <button id="yesBtn" type="button">Yes</button>
-      <!-- noBtn starts centered just below the text; JS will reposition it as needed -->
       <button id="noBtn" type="button" aria-label="No">No</button>
     </div>
 
@@ -106,17 +104,14 @@
       const noBtn = document.getElementById('noBtn');
       const card = document.getElementById('card');
 
-      // place the "No" button initially under the buttons container, centered horizontally
       function placeNoInitial() {
         const rect = card.getBoundingClientRect();
-        const startX = window.innerWidth/2;
-        const startY = rect.top + rect.height/2 + 36;
+        const startX = window.innerWidth / 2;
+        const startY = rect.top + rect.height / 2 + 36;
         setBtnPosition(startX, startY);
       }
 
-      // set button position (left/top are viewport coordinates)
       function setBtnPosition(x, y){
-        // clamp so the button stays fully in viewport
         const bw = noBtn.offsetWidth, bh = noBtn.offsetHeight;
         const padding = 12;
         const minX = padding;
@@ -129,50 +124,37 @@
         noBtn.style.top = clampedY + 'px';
       }
 
-      // move the button randomly but try to keep it away from (mx,my)
       function moveNoAwayFrom(mx, my) {
         const attempts = 18;
-        const minDist = 200; // desirable minimum distance from mouse
-        const bw = noBtn.offsetWidth, bh = noBtn.offsetHeight;
+        const minDist = 200;
         for (let i = 0; i < attempts; i++) {
           const x = Math.random() * window.innerWidth;
           const y = Math.random() * window.innerHeight;
-          const centerX = x;
-          const centerY = y;
-          const d = Math.hypot(centerX - mx, centerY - my);
+          const d = Math.hypot(x - mx, y - my);
           if (d > minDist) {
-            setBtnPosition(centerX, centerY);
+            setBtnPosition(x, y);
             return;
           }
         }
-        // fallback: push it directly opposite from the mouse
-        const oppositeX = window.innerWidth - mx;
-        const oppositeY = window.innerHeight - my;
-        setBtnPosition(oppositeX, oppositeY);
+        setBtnPosition(window.innerWidth - mx, window.innerHeight - my);
       }
 
-      // if mouse gets within threshold of the button center, move it
       function onMouseMove(e) {
         const rect = noBtn.getBoundingClientRect();
         const bx = rect.left + rect.width/2;
         const by = rect.top + rect.height/2;
-        const dx = e.clientX - bx;
-        const dy = e.clientY - by;
-        const dist = Math.hypot(dx, dy);
-        const threshold = 140; // px
-        if (dist < threshold) {
+        const dist = Math.hypot(e.clientX - bx, e.clientY - by);
+        if (dist < 140) {
           moveNoAwayFrom(e.clientX, e.clientY);
         }
       }
 
-      // touch support: move when trying to touch the button
       function onTouchMove(e){
-        if (!e.touches || e.touches.length === 0) return;
+        if (!e.touches || !e.touches.length) return;
         const t = e.touches[0];
         onMouseMove({clientX: t.clientX, clientY: t.clientY});
       }
 
-      // allow clicking the no button if user is fast enough or after many attempts: tiny easter egg
       noBtn.addEventListener('click', () => {
         noBtn.disabled = true;
         noBtn.innerText = "Fine... 😢";
@@ -183,16 +165,19 @@
         }, 700);
       });
 
+      // ✅ UPDATED: redirect to voucher.html
       yesBtn.addEventListener('click', () => {
         yesBtn.disabled = true;
         yesBtn.innerText = "Yay! ❤️";
-        // animate the heart in the heading
+
         const heart = document.querySelector('.heart');
         heart.style.transform = 'translateY(-6px) scale(1.2)';
-        setTimeout(() => heart.style.transform = '', 900);
+
+        setTimeout(() => {
+          window.location.href = "voucher.html";
+        }, 900);
       });
 
-      // Make the No button cheeky if user hovers directly on it (older browsers)
       noBtn.addEventListener('mouseenter', (e) => {
         moveNoAwayFrom(e.clientX, e.clientY);
       });
@@ -201,13 +186,10 @@
       window.addEventListener('touchmove', onTouchMove, {passive:true});
       window.addEventListener('resize', placeNoInitial);
 
-      // initial placement after layout
       window.addEventListener('load', () => {
-        // a small delay ensures proper sizing
         setTimeout(placeNoInitial, 40);
       });
 
-      // keyboard accessibility: let user focus and arrow-key move the No button if needed
       noBtn.addEventListener('keydown', (e) => {
         const step = 40;
         const rect = noBtn.getBoundingClientRect();
