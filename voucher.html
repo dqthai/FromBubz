@@ -3,19 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Your Valentine Voucher 💖</title>
+  <title>Valentine Voucher 💖</title>
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
+    /* Animations */
     @keyframes floatUp {
       0% { transform: translateY(0) scale(1); opacity: 1; }
       100% { transform: translateY(-120px) scale(1.3); opacity: 0; }
-    }
-
-    @keyframes floatHeartPhoto {
-      0% { transform: translate(0,0) rotate(0deg); opacity: 1; }
-      100% { transform: translate(0,-200px) rotate(20deg); opacity: 0; }
     }
 
     html, body {
@@ -29,19 +25,21 @@
       color: #3d2430;
     }
 
+    /* Transparent overlay */
     body::before {
       content: "";
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(255 246 248 / 0.3); /* lighter overlay */
+      background: rgba(255 255 255 / 0.6);
       backdrop-filter: blur(4px);
       z-index: 0;
     }
 
+    /* Voucher card */
     .voucher {
       position: relative;
       z-index: 1;
-      background: rgba(255 255 255 / 0.6); /* more transparent */
+      background: rgba(255 255 255 / 0.6);
       border-radius: 20px;
       padding: 40px 30px;
       box-shadow: 0 8px 30px rgba(214,51,108,0.15);
@@ -68,7 +66,7 @@
       display: block;
       font-size: 22px;
       margin: 12px 0;
-      color: #ff4d88; /* pink text for emphasis */
+      color: #ff4d88;
     }
 
     .redeem-note {
@@ -94,6 +92,7 @@
       font-size: 22px;
     }
 
+    /* Floating hearts */
     .floating-hearts {
       position: fixed;
       pointer-events: none;
@@ -135,7 +134,7 @@
 
 <body>
   <div class="voucher" role="main" aria-label="Valentine Voucher">
-    <div class="voucher-title" id="voucherTitle">Date Voucher</div>
+    <div class="voucher-title" id="voucherTitle">Date Voucher for Patootie 💖</div>
 
     <p><em>Because you make every day brighter and my heart happier.</em></p>
 
@@ -157,8 +156,18 @@
 
   <div class="floating-hearts" aria-hidden="true"></div>
 
+  <!-- SoundCloud Background Music -->
+  <iframe 
+    width="0" 
+    height="0" 
+    scrolling="no" 
+    frameborder="no" 
+    allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1331237860&auto_play=true&loop=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false">
+  </iframe>
+
   <script>
-    // floating hearts in the background
+    // Floating hearts
     const heartsContainer = document.querySelector('.floating-hearts');
     function createHeart() {
       const heart = document.createElement('span');
@@ -182,7 +191,6 @@
       div.appendChild(img);
       document.body.appendChild(div);
 
-      // animate upwards
       const duration = 6000 + Math.random() * 3000;
       div.animate([
         { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
