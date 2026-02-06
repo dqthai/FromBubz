@@ -6,7 +6,7 @@
   <title>Valentine Voucher 💖</title>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;500&display=swap');
 
     /* Floating heart rise animation */
     @keyframes floatUp {
@@ -22,39 +22,46 @@
       75% { transform: rotate(3deg); }
     }
 
-    /* Fade-in for line items */
+    /* Fade-in for line items with subtle scale */
     @keyframes fadeInUp {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
+      0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Soft pulse for tickle */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
     }
 
     html, body {
       margin: 0; padding: 0;
       height: 100%;
       overflow: hidden;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      color: #3d2430;
       background: url('us.jpg') no-repeat center center fixed;
       background-size: cover;
       position: relative;
-      color: #3d2430;
     }
 
+    /* Light overlay, background more visible */
     body::before {
       content: "";
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(255 255 255 / 0.6);
-      backdrop-filter: blur(4px);
+      background: rgba(255 255 255 / 0.25); /* lighter than before */
+      backdrop-filter: blur(6px); /* subtle blur for readability */
       z-index: 0;
     }
 
     .voucher {
       position: relative;
       z-index: 1;
-      background: rgba(255 255 255 / 0.6);
-      border-radius: 20px;
-      padding: 40px 30px;
-      box-shadow: 0 8px 30px rgba(214,51,108,0.15);
+      background: linear-gradient(to bottom right, rgba(255,255,255,0.8), rgba(255,192,203,0.6));
+      border-radius: 30px;
+      padding: 50px 35px;
+      box-shadow: 0 12px 40px rgba(214,51,108,0.25), inset 0 0 20px rgba(255,255,255,0.2);
       max-width: 500px;
       margin: auto;
       text-align: center;
@@ -65,19 +72,19 @@
     }
 
     .voucher-title {
-      font-size: 36px;
+      font-size: 42px;
       font-weight: 700;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       color: #d6336c;
-      text-shadow: 1px 1px 6px rgba(214,51,108,0.4);
+      text-shadow: 1px 1px 4px rgba(231,84,128,0.5);
       font-family: 'Great Vibes', cursive;
     }
 
     .line-item {
       display: block;
-      font-size: 22px;
-      margin: 10px 0;
-      color: #ff4d88;
+      font-size: 24px;
+      margin: 12px 0;
+      color: #e75480; /* softer pink */
       opacity: 0;
       animation: fadeInUp 0.8s forwards;
     }
@@ -88,13 +95,13 @@
     .line-item:nth-child(3) { animation-delay: 0.9s; }
     .line-item:nth-child(4) { animation-delay: 1.2s; }
     .line-item.tickle { 
-      animation-delay: 1.5s; /* fade-in delay */
+      animation-delay: 1.5s;
       display: inline-block;
     }
 
-    /* Wiggle class for continuous wiggle */
+    /* Wiggle and pulse for tickle */
     .wiggle {
-      animation: wiggle 0.5s ease-in-out infinite;
+      animation: wiggle 0.5s ease-in-out infinite, pulse 2s ease-in-out infinite;
       transform-origin: center;
     }
 
@@ -132,6 +139,7 @@
       bottom: 10px;
       font-size: 20px;
       color: #d6336c;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
       animation-name: floatUp;
       animation-timing-function: ease-out;
       animation-iteration-count: infinite;
@@ -152,7 +160,16 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      animation: rotateHeart 6s linear infinite;
     }
+    @keyframes rotateHeart {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Hover effect for line items */
+    .line-item:hover { transform: scale(1.05); transition: transform 0.3s ease; }
+
   </style>
 </head>
 
@@ -223,7 +240,7 @@
     setTimeout(() => {
       const tickle = document.querySelector('.line-item.tickle');
       tickle.classList.add('wiggle');
-    }, 1500); // matches the fadeInUp delay
+    }, 1500); // matches fade-in delay
   </script>
 </body>
 </html>
