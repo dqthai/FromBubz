@@ -33,7 +33,7 @@
       content: "";
       position: fixed;
       top:0; left:0; right:0; bottom:0;
-      background: rgba(255 255 255 / 0.25);
+      background: linear-gradient(to bottom, rgba(255,255,255,0.2), rgba(255,192,203,0.3));
       backdrop-filter: blur(6px);
       z-index: 0;
     }
@@ -50,10 +50,11 @@
       overflow-y: auto;
       text-align: center;
       color: #3d2430;
-      box-shadow: 0 10px 30px rgba(214,51,108,0.25), inset 0 0 15px rgba(255,255,255,0.2);
+      box-shadow: 0 15px 40px rgba(214,51,108,0.3), 0 0 60px rgba(255,192,203,0.2) inset;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      cursor: pointer;
     }
 
     .voucher-title {
@@ -78,13 +79,7 @@
     .line-item:nth-child(3){ animation-delay:0.9s;}
     .line-item:nth-child(4){ animation-delay:1.2s;}
     .line-item.tickle{ animation-delay:1.5s; display:inline-block; opacity:0;}
-
-    /* Wiggle only, no pulse */
-    .line-item.tickle.wiggle{ 
-      animation: wiggle 0.5s ease-in-out infinite; 
-      transform-origin:center; 
-      opacity:1; 
-    }
+    .line-item.tickle.wiggle{ animation: wiggle 0.5s ease-in-out infinite; transform-origin:center; opacity:1; }
 
     .redeem-note {
       margin-top: 2vh;
@@ -95,6 +90,21 @@
 
     .small-note { font-size: clamp(10px,3vw,14px); color:#6b6b6b; margin-top:1vh; font-style:italic;}
     .love-note { font-family:'Great Vibes', cursive; color:#d6336c; margin-top:2vh; font-size: clamp(18px,5vw,24px); }
+
+    /* Hidden flirty note */
+    .hidden-note {
+      display: none;
+      font-size: clamp(14px,4vw,18px);
+      color: #d6336c;
+      font-style: italic;
+      margin-top: 1.5vh;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .hidden-note.show {
+      display: block;
+      opacity: 1;
+    }
 
     .floating-hearts { position:fixed; pointer-events:none; top:0; left:0; right:0; bottom:0; z-index:2;}
     .floating-hearts span { position:absolute; bottom:10px; font-size:6vw; color:#d6336c; text-shadow:0 2px 4px rgba(0,0,0,0.2); animation-name:floatUp; animation-timing-function:ease-out; animation-iteration-count: infinite; opacity:0; user-select:none;}
@@ -124,6 +134,9 @@
     <p class="redeem-note" style="font-weight:600;color:#d6336c;">Valid only on February 14</p>
     <p class="small-note">No expiration. No refunds.</p>
     <p class="love-note">I love you more ❤️</p>
+
+    <!-- Hidden flirty note -->
+    <p class="hidden-note">Make you scream bacon 😘</p>
   </div>
 
   <div class="floating-hearts" aria-hidden="true"></div>
@@ -151,7 +164,7 @@
       div.appendChild(img);
       document.body.appendChild(div);
       const duration=6000+Math.random()*3000;
-      div.animate([{transform:`translateY(0) rotate(0deg)`,opacity:1},{transform:`translateY(-${window.innerHeight+100}px) rotate(${Math.random()*30-15}deg)`,opacity:0}],{duration:duration,easing:'ease-out'});
+      div.animate([{transform:`translateY(0) rotate(0deg)`,opacity:1},{transform:`translateY(-${window.innerHeight+100}px) rotate(${Math.random()*30-15}deg)`,opacity:0}],{duration: duration, easing:'ease-out'});
       setTimeout(()=>div.remove(),duration);
     }
     setInterval(createHeartPhoto,3000);
@@ -161,6 +174,13 @@
       const tickle=document.querySelector('.line-item.tickle');
       tickle.classList.add('wiggle');
     },1500);
+
+    // Toggle hidden flirty note on click
+    const voucher = document.querySelector('.voucher');
+    voucher.addEventListener('click', () => {
+      const note = document.querySelector('.hidden-note');
+      note.classList.toggle('show');
+    });
   </script>
 </body>
 </html>
